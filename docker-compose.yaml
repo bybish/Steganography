@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  steganography-backend:
+    build:
+      context: ./backend
+    ports:
+      - "8080:8080"
+    tty: true
+    networks:
+      - steganography-net
+
+  steganography-frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - steganography-net
+    environment:
+      - REACT_APP_API_URL=http://localhost:8080
+
+networks:
+  steganography-net:
+    driver: bridge
