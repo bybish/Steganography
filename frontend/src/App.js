@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { encodeText } from './api';
+import UploadForm from './components/UploadForm';
 
 function App() {
     const [inputText, setInputText] = useState('');
@@ -6,19 +8,7 @@ function App() {
 
     const handleEncode = async () => {
         try {
-            const response = await fetch('/api/encode', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ text: inputText }), // оборачиваем текст в JSON
-            });
-
-            if (!response.ok) {
-                throw new Error(`Ошибка ${response.status}`);
-            }
-
-            const text = await response.text();
+            const text = await encodeText(inputText);
             setResult(text);
         } catch (err) {
             console.error(err);
@@ -42,6 +32,10 @@ function App() {
             </button>
             <h3>Результат:</h3>
             <pre>{result}</pre>
+
+            <hr />
+
+            <UploadForm />
         </div>
     );
 }
