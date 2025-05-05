@@ -2,7 +2,8 @@ FROM debian:bullseye
 
 # Установка зависимостей
 RUN apt-get update && apt-get install -y \
-    g++ cmake git libboost-all-dev
+    g++ cmake git libboost-all-dev \
+    libpthread-stubs0-dev  # добавляем зависимости для pthread \
 
 # Копируем исходники и собираем
 WORKDIR /app
