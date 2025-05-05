@@ -6,13 +6,18 @@ function App() {
 
     const handleEncode = async () => {
         try {
-            const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8080'}/api/encode`, {
+            const response = await fetch('/api/encode', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: inputText,
+                body: JSON.stringify({ text: inputText }), // оборачиваем текст в JSON
             });
+
+            if (!response.ok) {
+                throw new Error(`Ошибка ${response.status}`);
+            }
+
             const text = await response.text();
             setResult(text);
         } catch (err) {
