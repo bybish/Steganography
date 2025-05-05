@@ -4,6 +4,8 @@ services:
   steganography-backend:
     build:
       context: ./backend
+    volumes:
+      - ./backend:/app  # <-- Монтируем исходники внутрь контейнера
     ports:
       - "8080:8080"
     tty: true
