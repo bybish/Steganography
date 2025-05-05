@@ -8,6 +8,9 @@ function App() {
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8080'}/api/encode`, {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 body: inputText,
             });
             const text = await response.text();
