@@ -1,6 +1,2 @@
 .idea
-backend/cmake_install.cmake
-backend/CMakeCache.txt
-backend/Makefile
-backend/steganography-server
-backend/CMakeFiles
+build
