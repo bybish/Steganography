@@ -9,8 +9,8 @@ RUN apt-get update && apt-get install -y \
     libxcb-shape0 libxcb-sync1 libxcb-xfixes0 libxcb-randr0 libxcb-render0 libxcb-shm0 libxcb-glx0
 
 WORKDIR /build
-COPY ./gui /src
+COPY ./src /src
 
-RUN cmake /src && make
+RUN #cmake /src && make
 
 CMD ["/bin/bash"]
