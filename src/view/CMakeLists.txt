@@ -1,6 +1,6 @@
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTOUIC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-add_library(view MainWindow.cpp MainWindow.ui)
+qt5_wrap_ui(UIS_HDRS MainWindow.ui)
+
+add_library(view MainWindow.cpp ${UIS_HDRS})
 target_link_libraries(view Qt5::Widgets)
-target_include_directories(view PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
