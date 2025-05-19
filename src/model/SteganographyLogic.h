@@ -1,12 +1,15 @@
-#ifndef STEGANOGRAPHY_LOGIC_H
-#define STEGANOGRAPHY_LOGIC_H
+#pragma once
 
-#include <QString>
+#include <string>
 
 class SteganographyLogic {
 public:
-    static QString encode(const QString& input);
-    static QString decode(const QString& input);
-};
+    static std::string encrypt(const std::string& text, const std::string& message, int index = 0);
+    static std::string decrypt(const std::string& text, int messageSize, int index = 0);
 
-#endif
+private:
+    static constexpr short CHAR_LENGTH = 8;
+
+    static std::string byteToBinary(unsigned char byte);
+    static std::string stringToBinary(const std::string& str);
+};

@@ -19,7 +19,8 @@ add_subdirectory(controller)
 add_executable(SteganographyApp main.cpp)
 
 # Подключаем исходники
-target_link_libraries(SteganographyApp
+target_link_libraries(
+        SteganographyApp
         Qt5::Widgets
         model
         view

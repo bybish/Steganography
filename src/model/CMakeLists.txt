@@ -1,1 +1,4 @@
-add_library(model SteganographyLogic.cpp)
+add_library(model
+        SteganographyLogic.cpp
+        SteganographyLogic.h
+)

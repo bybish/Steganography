@@ -1,8 +1,11 @@
 #include "MainController.h"
-#include <QFileDialog>
-#include <QFile>
 #include <QTextStream>
+#include <QPushButton>
+#include <QTextEdit>
+#include <QLineEdit>
+#include <QFileDialog>
 #include <QMessageBox>
+
 
 MainController::MainController(MainWindow* view, QObject* parent)
     : QObject(parent), m_view(view)
@@ -36,8 +39,8 @@ void MainController::saveEncryptedFile()
     QString message = m_view->findChild<QLineEdit*>("lineEditMessage")->text();
     QString text = m_view->findChild<QTextEdit*>("textEditInput")->toPlainText();
 
-    std::string result = m_logic.encrypt(text.toStdString(), message.toStdString(), 0);
-    if (result.starts_with("Error"))
+    std::string result = SteganographyLogic::encrypt(text.toStdString(), message.toStdString(), 0);
+    if (QString::fromStdString(result).startsWith("Error"))
     {
         QMessageBox::critical(m_view, "Encryption Error", QString::fromStdString(result));
         return;
