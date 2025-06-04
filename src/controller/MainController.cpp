@@ -5,26 +5,28 @@
 #include <QLineEdit>
 #include <QFileDialog>
 #include <QMessageBox>
+#include "../view/ui_MainWindow.h"
 
 MainController::MainController(MainWindow* view, QObject* parent)
     : QObject(parent), m_view(view)
 {
-    connect(view->findChild<QPushButton*>("btnLoad"), &QPushButton::clicked, this, &MainController::loadFile);
-    connect(view->findChild<QPushButton*>("btnSave"), &QPushButton::clicked, this, &MainController::saveEncryptedFile);
-    connect(view->findChild<QPushButton*>("btnLoadEncrypted"), &QPushButton::clicked, this, &MainController::loadEncryptedFile);
-    connect(view->findChild<QPushButton*>("btnDecrypt"), &QPushButton::clicked, this, &MainController::decryptText);
+    auto ui = m_view->getUi();
+
+    connect(ui->btnLoad, &QPushButton::clicked, this, &MainController::loadFile);
+    connect(ui->btnSave, &QPushButton::clicked, this, &MainController::saveEncryptedFile);
+    connect(ui->btnLoad_2, &QPushButton::clicked, this, &MainController::loadEncryptedFile);
+    connect(ui->btnDecrypt, &QPushButton::clicked, this, &MainController::decryptText);
 }
 
 void MainController::loadFile()
 {
-    QString filename = QFileDialog::getOpenFileName(m_view, "Open Text File", "", "Text Files (*.txt)");
+    QString filename = QFileDialog::getOpenFileName(m_view, "Открыть текстовый файл", "", "Text Files (*.txt)");
     if (filename.isEmpty())
         return;
 
     QFile file(filename);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        QMessageBox::warning(m_view, "Error", "Cannot open file.");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QMessageBox::warning(m_view, "Ошибка", "Не удалось открыть файл.");
         return;
     }
 
@@ -32,29 +34,28 @@ void MainController::loadFile()
     m_loadedText = in.readAll();
     file.close();
 
-    m_view->findChild<QTextEdit*>("textEditInput")->setPlainText(m_loadedText);
+    m_view->getUi()->textEditMainEncrypt->setPlainText(m_loadedText);
 }
 
 void MainController::saveEncryptedFile()
 {
-    QString message = m_view->findChild<QLineEdit*>("lineEditMessage")->text();
-    QString text = m_view->findChild<QTextEdit*>("textEditInput")->toPlainText();
+    auto ui = m_view->getUi();
+    QString message = ui->lineEditMessage->text();
+    QString text = ui->textEditMainEncrypt->toPlainText();
 
     std::string result = SteganographyLogic::encrypt(text.toStdString(), message.toStdString(), 0);
-    if (QString::fromStdString(result).startsWith("Error"))
-    {
-        QMessageBox::critical(m_view, "Encryption Error", QString::fromStdString(result));
+    if (QString::fromStdString(result).startsWith("Error")) {
+        QMessageBox::critical(m_view, "Ошибка шифрования", QString::fromStdString(result));
         return;
     }
 
-    QString filename = QFileDialog::getSaveFileName(m_view, "Save Encrypted File", "", "Text Files (*.txt)");
+    QString filename = QFileDialog::getSaveFileName(m_view, "Сохранить зашифрованный файл", "", "Text Files (*.txt)");
     if (filename.isEmpty())
         return;
 
     QFile file(filename);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-    {
-        QMessageBox::warning(m_view, "Error", "Cannot save file.");
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QMessageBox::warning(m_view, "Ошибка", "Не удалось сохранить файл.");
         return;
     }
 
@@ -62,17 +63,18 @@ void MainController::saveEncryptedFile()
     out << QString::fromStdString(result);
     file.close();
 
-    QMessageBox::information(m_view, "Success", "Encrypted file saved.");
+    QMessageBox::information(m_view, "Успех", "Файл зашифрован и сохранен.");
 }
 
 void MainController::loadEncryptedFile()
 {
-    QString filename = QFileDialog::getOpenFileName(m_view, "Open Encrypted Text File", "", "Text Files (*.txt)");
-    if (filename.isEmpty()) return;
+    QString filename = QFileDialog::getOpenFileName(m_view, "Открыть зашифрованный файл", "", "Text Files (*.txt)");
+    if (filename.isEmpty())
+        return;
 
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QMessageBox::warning(m_view, "Error", "Cannot open encrypted file.");
+        QMessageBox::warning(m_view, "Ошибка", "Не удалось открыть зашифрованный файл.");
         return;
     }
 
@@ -80,21 +82,22 @@ void MainController::loadEncryptedFile()
     m_encryptedText = in.readAll();
     file.close();
 
-    m_view->findChild<QTextEdit*>("textEditMainDecrypt")->setPlainText(m_encryptedText);
+    m_view->getUi()->textEditMainDecrypt->setPlainText(m_encryptedText);
 }
 
 void MainController::decryptText()
 {
-    QString encryptedText = m_view->findChild<QTextEdit*>("textEditMainDecrypt")->toPlainText();
+    auto ui = m_view->getUi();
+
+    QString encryptedText = ui->textEditMainDecrypt->toPlainText();
     bool ok;
-    int messageSize = m_view->findChild<QLineEdit*>("lineEditMsgLength")->text().toInt(&ok);
+    int messageSize = ui->lineEditMsgLength->text().toInt(&ok);
 
     if (!ok || messageSize <= 0) {
-        QMessageBox::warning(m_view, "Error", "Invalid message size entered");
+        QMessageBox::warning(m_view, "Ошибка", "Введите корректную длину скрытого сообщения.");
         return;
     }
 
-    std::string decryptedResult = SteganographyLogic::decrypt(encryptedText.toStdString(), messageSize, 0);
-
-    m_view->findChild<QLineEdit*>("lineEditDecrypted")->setText(QString::fromStdString(decryptedResult));
+    std::string decrypted = SteganographyLogic::decrypt(encryptedText.toStdString(), messageSize, 0);
+    ui->lineEditDecrypted->setText(QString::fromStdString(decrypted));
 }

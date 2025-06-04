@@ -21,4 +21,5 @@ private:
     MainWindow* m_view;
     SteganographyLogic m_logic;
     QString m_loadedText;
+    QString m_encryptedText;
 };

@@ -14,7 +14,11 @@ public:
     explicit MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
 
+    Ui::MainWindow* getUi() const;
+
 private:
-    void onToggleModeChanged(int state);
     Ui::MainWindow* ui;
+
+private slots:
+    void onToggleModeChanged(int state);
 };
