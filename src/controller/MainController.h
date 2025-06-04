@@ -14,6 +14,8 @@ public:
 private slots:
     void loadFile();
     void saveEncryptedFile();
+    void loadEncryptedFile();
+    void decryptText();
 
 private:
     MainWindow* m_view;
