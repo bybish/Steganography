@@ -1,52 +1,292 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
-    <class>MainWindow</class>
-    <widget class="QMainWindow" name="MainWindow">
-        <property name="geometry">
-            <rect>
-                <x>0</x><y>0</y><width>600</width><height>400</height>
-            </rect>
-        </property>
-        <widget class="QWidget" name="centralwidget">
-            <widget class="QPushButton" name="btnLoad">
-                <property name="geometry">
-                    <rect>
-                        <x>20</x><y>20</y><width>120</width><height>30</height>
-                    </rect>
-                </property>
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+   <property name="geometry">
+     <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>854</width>
+       <height>480</height>
+     </rect>
+   </property>
+   <property name="windowTitle">
+     <string>Шифратор</string>
+   </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="styleSheet">
+    <string notr="true">
+        /* Основные стили */
+        QWidget {
+            background-color: #0b1c2c;
+            color: #ecf0f1;
+            font-family: "Segoe UI", sans-serif;
+        }
+        QLabel {
+            color: #ecf0f1;
+        }
+        QLineEdit, QTextEdit {
+            background-color: #112b40;
+            border: 1px solid #3d566e;
+            color: #ecf0f1;
+            border-radius: 6px;
+            padding: 6px;
+            font-size: 13px;
+        }
+        QPushButton {
+            background-color: #c0392b;
+            color: white;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+        QPushButton:hover {
+            background-color: #922b21;
+        }
+
+        /* Стиль переключателя */
+        QCheckBox {
+            spacing: 8px;
+            color: #ecf0f1;
+        }
+        QCheckBox::indicator {
+            width: 60px;
+            height: 30px;
+            border-radius: 15px;
+            background-color: #7f8c8d;
+            border: 2px solid #34495e;
+        }
+        QCheckBox::indicator:checked {
+            background-color: #2ecc71;
+            border: 2px solid #27ae60;
+        }
+        QCheckBox::indicator:unchecked {
+            background-color: #7f8c8d;
+            border: 2px solid #34495e;
+        }
+        QCheckBox::indicator:checked:hover {
+            background-color: #27ae60;
+        }
+        QCheckBox::indicator:unchecked:hover {
+            background-color: #95a5a6;
+        }
+        QCheckBox::indicator:disabled {
+            background-color: #34495e;
+        }
+        QCheckBox::indicator::before {
+            content: "";
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            left: 2px;
+            top: 2px;
+            border-radius: 13px;
+            background-color: white;
+            transition: left 0.3s ease-in-out;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        QCheckBox::indicator:checked::before {
+            left: calc(100% - 28px); /* Переводит ползунок в правую сторону */
+        }
+    </string>
+   </property>
+   <layout class="QVBoxLayout" name="mainLayout">
+    <item>
+     <layout class="QHBoxLayout" name="topBarLayout">
+      <item>
+        <widget class="QWidget" name="leftPart">
+          <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>1</horstretch>
+              <verstretch>-2</verstretch>
+            </sizepolicy>
+          </property>
+          <layout class="QVBoxLayout" name="leftPartLayout">
+            <item>
+              <widget class="QLabel" name="labelModeTitle">
                 <property name="text">
-                    <string>Load File</string>
+                  <string>Зашифровать</string>
                 </property>
-            </widget>
-            <widget class="QPushButton" name="btnSave">
-                <property name="geometry">
-                    <rect>
-                        <x>160</x><y>20</y><width>150</width><height>30</height>
-                    </rect>
+                <property name="alignment">
+                  <set>Qt::AlignCenter</set>
                 </property>
-                <property name="text">
-                    <string>Save Encrypted File</string>
+                <property name="styleSheet">
+                  <string notr="true">
+                    font-weight: bold;
+                    font-size: 30px;
+                  </string>
                 </property>
-            </widget>
-            <widget class="QLineEdit" name="lineEditMessage">
-                <property name="geometry">
-                    <rect>
-                        <x>320</x><y>20</y><width>250</width><height>30</height>
-                    </rect>
-                </property>
-                <property name="placeholderText">
-                    <string>Enter secret message</string>
-                </property>
-            </widget>
-            <widget class="QTextEdit" name="textEditInput">
-                <property name="geometry">
-                    <rect>
-                        <x>20</x><y>70</y><width>550</width><height>300</height>
-                    </rect>
-                </property>
-            </widget>
+              </widget>
+            </item>
+          </layout>
         </widget>
-    </widget>
-    <resources/>
-    <connections/>
+      </item>
+        <item>
+            <widget class="QWidget" name="rightPart">
+                <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                        <horstretch>1</horstretch>
+                        <verstretch>0</verstretch>
+                    </sizepolicy>
+                </property>
+                <layout class="QVBoxLayout" name="rightPartLayout">
+                    <item>
+                        <spacer name="verticalSpacerTop">
+                            <property name="sizeHint" stdset="0">
+                                <size>
+                                    <width>20</width>
+                                    <height>40</height>
+                                </size>
+                            </property>
+                        </spacer>
+                    </item>
+                    <item>
+                        <layout class="QHBoxLayout" name="toggleLayout">
+                            <item>
+                                <spacer name="horizontalSpacerLeft">
+                                    <property name="sizeHint" stdset="0">
+                                        <size>
+                                            <width>40</width>
+                                            <height>20</height>
+                                        </size>
+                                    </property>
+                                </spacer>
+                            </item>
+
+                            <item>
+                                <widget class="QCheckBox" name="toggleMode">
+                                    <property name="text">
+                                        <string/> <!-- Пустая строка - убираем текст -->
+                                    </property>
+                                    <property name="toolTip">
+                                        <string>Переключить режим шифрования/дешифрования</string>
+                                    </property>
+                                    <property name="styleSheet">
+                                        <string notr="true">
+                                            QCheckBox::indicator {
+                                                width: 60px;
+                                                height: 30px;
+                                            }
+                                        </string>
+                                    </property>
+                                </widget>
+                            </item>
+                            <item>
+                                <spacer name="horizontalSpacerRight">
+                                    <property name="sizeHint" stdset="0">
+                                        <size>
+                                            <width>40</width>
+                                            <height>20</height>
+                                        </size>
+                                    </property>
+                                </spacer>
+                            </item>
+                        </layout>
+                    </item>
+                    <item>
+                        <spacer name="verticalSpacerBottom">
+                            <property name="sizeHint" stdset="0">
+                                <size>
+                                    <width>20</width>
+                                    <height>40</height>
+                                </size>
+                            </property>
+                        </spacer>
+                    </item>
+                </layout>
+            </widget>
+        </item>
+    </layout>
+    </item>
+    <item>
+     <widget class="QStackedWidget" name="stackedWidget">
+      <widget class="QWidget" name="pageEncrypt">
+       <layout class="QVBoxLayout" name="encryptLayout">
+        <item>
+         <widget class="QPushButton" name="btnLoad">
+          <property name="text">
+           <string>Загрузить текст</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTextEdit" name="textEditMainEncrypt"/>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="encryptBottomLayout">
+          <item>
+           <widget class="QLineEdit" name="lineEditMessage">
+            <property name="placeholderText">
+             <string>Введите сообщение для шифрования</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnEncrypt">
+            <property name="text">
+             <string>Зашифровать</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnSave">
+            <property name="text">
+             <string>Сохранить файл</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="pageDecrypt">
+       <layout class="QVBoxLayout" name="decryptLayout">
+        <item>
+         <widget class="QPushButton" name="btnLoad_2">
+          <property name="text">
+           <string>Загрузить текст</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTextEdit" name="textEditMainDecrypt"/>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="decryptBottomLayout">
+          <item>
+           <widget class="QLineEdit" name="lineEditMsgLength">
+            <property name="placeholderText">
+             <string>Длина скрытого сообщения</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnDecrypt">
+            <property name="text">
+             <string>Дешифровать</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="lineEditDecrypted">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="placeholderText">
+             <string>Расшифрованное сообщение</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
 </ui>

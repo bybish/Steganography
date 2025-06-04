@@ -15,5 +15,6 @@ public:
     ~MainWindow();
 
 private:
+    void onToggleModeChanged(int state);
     Ui::MainWindow* ui;
 };
