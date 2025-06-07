@@ -1,82 +1,141 @@
-#include "SteganographyLogic.h"
+#include <iostream>
+#include <string>
+#include <unordered_map>
 #include <bitset>
+#include <locale>
+#include <clocale>
 
-std::string SteganographyLogic::byteToBinary(unsigned char byte) {
-    std::bitset<8> bits(byte);
-    return bits.to_string();
+const short CHAR_LENGTH = 16;
+
+const std::unordered_map<wchar_t, wchar_t> ru_to_en_16 =
+{
+	{L'�', L'A'}, {L'�', L'a'}, {L'�', L'B'}, {L'�', L'E'}, {L'�', L'e'}, {L'�', L'K'},
+	{L'�', L'M'}, {L'�', L'H'}, {L'�', L'O'}, {L'�', L'o'}, {L'�', L'P'}, {L'�', L'p'},
+	{L'�', L'C'}, {L'�', L'c'}, {L'�', L'T'}, {L'�', L'y'}, {L'�', L'X'}, {L'�', L'x'}
+};
+
+
+const std::unordered_map<wchar_t, wchar_t> en_to_ru_16 = 
+{
+	{L'A', L'�'}, {L'a', L'�'}, {L'B', L'�'}, {L'E', L'�'}, {L'e', L'�'}, {L'K', L'�'},
+	{L'M', L'�'}, {L'H', L'�'}, {L'O', L'�'}, {L'o', L'�'}, {L'P', L'�'}, {L'p', L'�'},
+	{L'C', L'�'}, {L'c', L'�'}, {L'T', L'�'}, {L'y', L'�'}, {L'X', L'�'}, {L'x', L'�'}
+};
+
+std::string binary_num(wchar_t value)
+{
+	std::bitset<16> bits(value);
+	return bits.to_string();
 }
 
-std::string SteganographyLogic::stringToBinary(const std::string& str) {
-    std::string buffer;
-    buffer.reserve(str.size() * CHAR_LENGTH);
+std::string binary_string(const std::wstring& str)
+{
+	std::string bin_str;
+	bin_str.reserve(str.size() * CHAR_LENGTH);
 
-    for (unsigned char c : str) {
-        buffer += byteToBinary(c);
-    }
-    return buffer;
+	for (wchar_t c : str)
+	{
+		bin_str += binary_num(c);
+	}
+	return bin_str;
 }
 
-std::string SteganographyLogic::encrypt(const std::string& originalText, const std::string& msg, int idx) {
-    std::string str = originalText;
+long long eq_symbols_count(const std::wstring& str)
+{
+	int k = 0;
+	for (int i = 0; i < str.size(); ++i)
+	{
+		auto it = ru_to_en_16.find(str[i]);
+		if (it != ru_to_en_16.end())
+			k++;
+	}
 
-    str.erase(0, str.find_first_not_of(' '));
-    str.erase(str.find_last_not_of(' ') + 1);
-
-    for (int i = 1; i < str.size(); ++i) {
-        if (str[i] == ' ' && str[i - 1] == ' ') {
-            str.erase(i, 1);
-            --i;
-        }
-    }
-
-    int s = 0;
-    for (int i = idx; i < str.size(); ++i) {
-        if (str[i] == ' ') ++s;
-    }
-
-    std::string bin_msg = stringToBinary(msg);
-
-    if (s < msg.size() * CHAR_LENGTH) {
-        return "Error: message is too long for the given text";
-    }
-
-    int k = 0;
-    for (int i = idx; i < str.size() && k < bin_msg.size(); ++i) {
-        if (str[i] == ' ') {
-            if (bin_msg[k] == '1') {
-                str.insert(i, " ");
-                ++i;
-            }
-            ++k;
-        }
-    }
-
-    return str;
+	return k;
 }
 
-std::string SteganographyLogic::decrypt(const std::string& str, int msg_size, int idx) {
-    std::string bin_msg;
-    bin_msg.reserve(msg_size * CHAR_LENGTH);
+std::wstring encrypt(std::wstring& str, const std::wstring& msg)
+{
+	std::string bin_msg;
+	bin_msg.reserve(msg.size() * CHAR_LENGTH);
 
-    int k = 0;
-    for (int i = idx; i < str.size() - 1 && k < msg_size * CHAR_LENGTH; ++i) {
-        if (str[i] == ' ') {
-            if (str[i + 1] == ' ') {
-                bin_msg += '1';
-                ++i;
-            } else {
-                bin_msg += '0';
-            }
-            ++k;
-        }
-    }
+	bin_msg = binary_string(msg);
 
-    std::string dec_msg;
-    for (size_t i = 0; i + 7 < bin_msg.size(); i += 8) {
-        std::bitset<8> bits(bin_msg.substr(i, 8));
-        unsigned char byte = static_cast<unsigned char>(bits.to_ulong());
-        dec_msg += byte;
-    }
+	for (int i = 0, k = 0; i < str.size() && k < bin_msg.size(); ++i)
+	{
+		wchar_t current = str[i];
+		wchar_t ru = 0, en = 0;
+		bool found = false;
 
-    return dec_msg;
+		auto it_ru = ru_to_en_16.find(current);
+		if (it_ru != ru_to_en_16.end()) 
+		{
+			ru = it_ru->first;
+			en = it_ru->second;
+			found = true;
+		}
+		else 
+		{
+			auto it_en = en_to_ru_16.find(current);
+			if (it_en != en_to_ru_16.end()) 
+			{
+				en = it_en->first;
+				ru = it_en->second;
+				found = true;
+			}
+		}
+
+		if (found)
+		{
+			wchar_t old_char = str[i];
+
+			if (bin_msg[k] == '1')
+				str[i] = ru;
+			else
+				str[i] = en; 
+
+			++k;
+		}
+	}
+
+	return str;
 }
+
+std::wstring decrypt(std::wstring& str)
+{
+	std::string bin_msg;
+
+	for (int i = 0; i < str.size(); ++i)
+	{
+		wchar_t current = str[i];
+
+		if (ru_to_en_16.count(current))
+		{
+			bin_msg += '1';
+		}
+		else if (en_to_ru_16.count(current))
+		{
+			bin_msg += '0';
+		}
+	}
+
+	std::wstring decrypted;
+
+	for (size_t i = 0; i + CHAR_LENGTH <= str.size(); i += CHAR_LENGTH)
+	{
+		std::bitset<CHAR_LENGTH> bits(bin_msg.substr(i, CHAR_LENGTH));
+		wchar_t ch = static_cast<wchar_t>(bits.to_ulong());
+		if (ch != 0)             
+			decrypted += ch;
+	}
+
+	return decrypted;
+}
+
+int main()
+{
+	std::locale::global(std::locale(""));
+	std::wcin.imbue(std::locale());
+	std::wcout.imbue(std::locale());
+	return 0;
+}
+
