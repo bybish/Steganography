@@ -7,10 +7,8 @@ MainWindow::MainWindow(QWidget* parent)
 {
     ui->setupUi(this);
     
-    // Начальное состояние - страница шифрования
     ui->stackedWidget->setCurrentIndex(0);
     
-    // Подключаем переключение режима
     connect(ui->toggleMode, &QCheckBox::stateChanged, this, &MainWindow::onToggleModeChanged);
 }
 
