@@ -253,35 +253,37 @@
          <widget class="QTextEdit" name="textEditMainDecrypt"/>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="decryptBottomLayout">
-        <item>
-        <spacer name="horizontalSpacer">
-            <property name="sizeHint" stdset="0">
-            <size>
-                <width>40</width>
-                <height>20</height>
-            </size>
-            </property>
-        </spacer>
-        </item>
-          <item>
-           <widget class="QPushButton" name="btnDecrypt">
-            <property name="text">
-             <string>Дешифровать</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="lineEditDecrypted">
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-            <property name="placeholderText">
-             <string>Расшифрованное сообщение</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
+            <layout class="QHBoxLayout" name="decryptBottomLayout">
+                <item>
+                    <widget class="QPushButton" name="btnDecrypt">
+                        <property name="text">
+                            <string>Дешифровать</string>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                                <horstretch>1</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
+                        </property>
+                    </widget>
+                </item>
+                <item>
+                    <widget class="QLineEdit" name="lineEditDecrypted">
+                        <property name="readOnly">
+                            <bool>true</bool>
+                        </property>
+                        <property name="placeholderText">
+                            <string>Расшифрованное сообщение</string>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                                <horstretch>1</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
+                        </property>
+                    </widget>
+                </item>
+            </layout>
         </item>
        </layout>
       </widget>
