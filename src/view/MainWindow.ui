@@ -220,19 +220,24 @@
             <property name="placeholderText">
              <string>Введите сообщение для шифрования</string>
             </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btnEncrypt">
-            <property name="text">
-             <string>Зашифровать</string>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>1</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QPushButton" name="btnSave">
             <property name="text">
-             <string>Сохранить файл</string>
+             <string>Сохранить зашифрованный файл</string>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>1</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
             </property>
            </widget>
           </item>
